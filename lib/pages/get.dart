@@ -8,7 +8,7 @@ class Get extends StatelessWidget {
   final Dio _dio = Dio();
 
   Future<Map<String, dynamic>> getPokemons() async {
-    final reponse = await _dio.get('http://127.0.0.1:8000/podex/api');
+    final reponse = await _dio.get('http://192.168.100.11:8000/podex/api');
     return reponse.data;
   }
 

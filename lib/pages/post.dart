@@ -15,7 +15,7 @@ class _PostState extends State<Post> {
 
   Future<Map<String, dynamic>> postRequest(String number) async {
     final reponse = await dio.post(
-      'http://127.0.0.1:8000/podex/api/',
+      'http://192.168.100.11:8000/podex/api/',
       data: {'number': number},
       options: Options(headers: {'Content-Type': 'application/json'}),
     );
@@ -31,6 +31,7 @@ class _PostState extends State<Post> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Pokedex')),
+      resizeToAvoidBottomInset: false,
 
       body: FutureBuilder<Map<String, dynamic>>(
         future: postRequest(number),
@@ -47,101 +48,103 @@ class _PostState extends State<Post> {
                 Map<String, dynamic> data = snapshot.data!;
                 Pokemon pokemon = parserPokemon(data['pokemon'], number);
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric( horizontal: 34.0, vertical: 8.0),
-                      child: TextField(
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                  
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric( horizontal: 34.0, vertical: 8.0),
+                        child: TextField(
+                          
+                          controller: numberController,
+                          autofocus: false,
+                          decoration: InputDecoration(
+                            hintText: 'Enter Pokemon Number',
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: const Color.fromARGB(255, 175, 40, 199),
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
                         
-                        controller: numberController,
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          hintText: 'Enter Pokemon Number',
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 175, 40, 199),
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.black,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
+                          keyboardType: TextInputType.number,
                         ),
+                      ),
                       
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    
-
-                    
-                    Image.asset('Glossy Poké Ball Asset Icon.png'),
-                    SizedBox(height: 16.0),
-                    Text(
-                      pokemon.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                    SizedBox(height: 23.0),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.purpleAccent[500],
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
+                  
+                      
+                      Image.asset('Glossy Poké Ball Asset Icon.png'),
+                      SizedBox(height: 16.0),
+                      Text(
+                        pokemon.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
                         ),
-                       
-                        child: Text("Search",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-
-                        onPressed: () async {
-                          number = numberController.text;
-                          await postRequest(number);
-                          setState(() {
-                          
-                          });
-                        },
                       ),
-                    ),
-                    
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.purpleAccent[500],
-                        
-                          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
+                      SizedBox(height: 23.0),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.purpleAccent[500],
+                            foregroundColor: Colors.white,
+                            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
                           ),
+                         
+                          child: Text("Search",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                  
+                          onPressed: () async {
+                            number = numberController.text;
+                            await postRequest(number);
+                            setState(() {
+                            
+                            });
+                          },
                         ),
-                       
-                        child: Text("Randomize",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.purpleAccent[500]),),
-
-                        onPressed: () async {
-                          Random randomizer = Random();
-                          number = (randomizer.nextInt(20) + 1).toString();
-                          await postRequest(number);
-                          setState(() {
-                          
-                          });
-                        },
                       ),
-                    ),
-                  ],
+                      
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.purpleAccent[500],
+                          
+                            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                          ),
+                         
+                          child: Text("Randomize",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.purpleAccent[500]),),
+                  
+                          onPressed: () async {
+                            Random randomizer = Random();
+                            number = (randomizer.nextInt(20) + 1).toString();
+                            await postRequest(number);
+                            setState(() {
+                            
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               } else {
                 return Center(child: Text('There is no data'));
